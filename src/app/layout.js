@@ -8,27 +8,37 @@ import { headers } from "next/headers";
 const inter = Inter({ subsets: ["latin"] });
 
 // Helper function to get subdomain from host
+// In src/app/page.js and src/app/layout.js
 function getSubdomain(host) {
-  console.log("Getting subdomain from host (layout):", host);
-  
-  // Always return d2d for localhost for development
+  console.log("[Vercel Debug] Host received by getSubdomain:", host);
+  if (!host) { // Safety check for host
+      console.warn("[Vercel Debug] Host is undefined or null in getSubdomain. Defaulting to 'default'.");
+      return "default"; // Or handle as an error
+  }
   if (host.includes("localhost")) {
-    console.log("Localhost detected in layout, returning 'd2d'");
+    console.log("[Vercel Debug] Localhost detected, returning 'd2d'");
     return "d2d";
   }
-  
-  // Extract subdomain from host (e.g., 'mysite.example.com' -> 'mysite')
   const parts = host.split(".");
-  // Check if we have a subdomain
-  if (parts.length > 2) {
-    console.log("Subdomain detected in layout:", parts[0]);
-    return parts[0];
+  // Vercel preview URLs can be long like project-name-git-branch-org.vercel.app
+  // Or simple project-name.vercel.app
+  // Custom domains: yoursubdomain.yourdomain.com or yourdomain.com
+  if (parts.length > 2 && parts[0] !== "www") { // A basic check for subdomain
+    const subdomain = parts[0];
+    // Add more checks if your vercel.app URL itself is being parsed as a subdomain you don't want
+    if (subdomain.endsWith("-git") || subdomain.endsWith(process.env.VERCEL_GIT_REPO_SLUG?.toLowerCase())) { // Example, adjust as needed
+        const mainDomain = parts.slice(parts.length -2).join('.'); // e.g. vercel.app or yourcustomdomain.com
+        console.log(`[Vercel Debug] Vercel preview URL or similar detected, treating as main domain: ${mainDomain}, returning "default" or main part`);
+        return "default"; // Or determine your main site's identifier
+    }
+    console.log("[Vercel Debug] Derived subdomain:", subdomain);
+    return subdomain;
   }
-  
-  // Default subdomain or handle www
-  const subdomain = parts[0] === "www" ? "default" : parts[0];
-  console.log("Using subdomain in layout:", subdomain);
-  return subdomain;
+  // Handle cases like 'yourdomain.com' or 'www.yourdomain.com' or 'project.vercel.app'
+  // This part might need to be smarter based on your actual domain setup on Vercel
+  const mainSiteIdentifier = parts[0] === "www" ? parts[1] : parts[0]; // crude, adjust as needed
+  console.log("[Vercel Debug] No distinct subdomain found, using main site identifier:", mainSiteIdentifier);
+  return mainSiteIdentifier; // Or a fixed "default" if that's your main site
 }
 
 // Force dynamic rendering since we're using headers()
