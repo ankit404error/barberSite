@@ -181,44 +181,48 @@ export const fetchCompleteSiteData = async (subdomain) => {
  * @param {string} slug - The page slug
  * @returns {Object} Page data with sections
  */
+// src/lib/api/siteservice.js
 export async function fetchPageData(subdomain, slug = "home") {
   try {
-    const data = readSiteData();
-    
-    // For localhost, always use d2d data without checking subdomain
-    if (subdomain === "localhost:3000" || subdomain === "localhost:3001") {
-      // Just check if the site is active
-      if (!data.site.is_active) {
-        throw new Error("Site is not active");
+    const data = readSiteData(); // This is your d2dData
+
+    // If the runtime-derived subdomain matches the subdomain in d2d.json, use it.
+    // This makes d2d.json specifically serve the "d2d" site.
+    if (data.site.subdomain === subdomain && data.site.is_active) {
+      // Verify page exists
+      const page = data.pages[slug];
+      if (!page) {
+        throw new Error(`Page with slug "<span class="math-inline">\{slug\}" not found for subdomain "</span>{subdomain}"`);
       }
-    } else if (data.site.subdomain !== subdomain || !data.site.is_active) {
-      // For other environments, check both subdomain and active status
-      throw new Error("Site not found");
+      const { sections, ...pageData } = page;
+      return {
+        site: data.site,
+        siteMeta: data.siteMeta,
+        config: data.config,
+        theme: data.theme,
+        page: pageData,
+        sections: sections || [],
+      };
+    } else if (subdomain === "localhost" || host.includes("localhost")) {
+        // Special handling for localhost if you want it to *always* serve d2d.json
+        // even if the subdomain derived by getSubdomain isn't "d2d" (though it is currently)
+        // This block might be redundant if getSubdomain in page.js already handles localhost.
+        // More robustly, rely on the `subdomain` argument passed in.
+        // If `getSubdomain` in page.js returns "d2d" for localhost, then the
+        // `data.site.subdomain === subdomain` check should just work.
+
+        // Simpler: just rely on the passed 'subdomain' argument
+        console.warn(`Subdomain mismatch or site inactive. Requested: "<span class="math-inline">\{subdomain\}", d2d\.json has\: "</span>{data.site.subdomain}". Falling back or erroring.`);
+        throw new Error(`Site for subdomain "${subdomain}" not found or not active.`);
+    } else {
+         throw new Error(`Site for subdomain "${subdomain}" not found or not active (compared to d2d.json).`);
     }
 
-    // Verify page exists
-    const page = data.pages[slug];
-    if (!page) {
-      throw new Error("Page not found");
-    }
-
-    // Extract the data we need
-    const { sections, ...pageData } = page;
-    
-    return {
-      site: data.site,
-      siteMeta: data.siteMeta,
-      config: data.config,
-      theme: data.theme,
-      page: pageData,
-      sections: sections || [],
-    };
   } catch (error) {
     console.error("Error fetching page data:", error);
-    throw error;
+    throw error; // Re-throw to be caught by page.js for mock data fallback
   }
 }
-
 /**
  * Fetch site configuration and themes
  * @param {string} subdomain - The site subdomain
