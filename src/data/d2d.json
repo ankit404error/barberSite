@@ -1,0 +1,280 @@
+{
+    "site": {
+      "id": "4fafcd74-7ba1-48a2-937f-4a46a5010c37",
+      "subdomain": "d2d",
+      "name": "Demo Website",
+      "is_active": true,
+      "created_by": "c9557e00-5aec-4113-ae36-69f96b57e00f",
+      "created_at": "2025-05-19T19:06:13.627779+00:00",
+      "updated_at": "2025-05-19T19:06:13.627779+00:00"
+    },
+    "siteMeta": {
+      "id": "fbebcbed-075a-4913-b241-aed2877ee21c",
+      "site_id": "4fafcd74-7ba1-48a2-937f-4a46a5010c37",
+      "title": "D2D Demo Website",
+      "description": "A demonstration of our modular website builder",
+      "og_image": "https://via.placeholder.com/1200x630",
+      "favicon": "https://via.placeholder.com/32x32",
+      "keywords": "demo, website, modular, builder",
+      "twitter_handle": "@demosite"
+    },
+    "config": {
+      "id": "56a779ad-a561-41e5-b988-11bdc5628491",
+      "site_id": "4fafcd74-7ba1-48a2-937f-4a46a5010c37",
+      "font_body": "Inter",
+      "font_heading": "Poppins",
+      "font_body_weights": [
+        "400",
+        "500"
+      ],
+      "font_heading_weights": [
+        "600",
+        "700"
+      ],
+      "max_width": "1280px",
+      "radius_lg": "1rem",
+      "radius_md": "0.5rem",
+      "radius_sm": "0.25rem",
+      "radius_full": "9999px"
+    },
+    "theme": {
+      "id": "d5ac8346-16a4-47d8-b7f0-4e4a42be8fcc",
+      "site_id": "4fafcd74-7ba1-48a2-937f-4a46a5010c37",
+      "name": "Default Theme",
+      "primary_color": "#2563eb",
+      "primary_hover": "#2563eb",
+      "secondary": "#f97316",
+      "secondary_hover": "#ea580c",
+      "accent": "#8b5cf6",
+      "accent_hover": "#7c3aed",
+      "background": "#ffffff",
+      "foreground": "#0f172a",
+      "muted": "#f1f5f9",
+      "border": "#e2e8f0",
+      "card": "#ffffff",
+      "card_foreground": "#0f172a",
+      "error": "#ef4444",
+      "success": "#22c55e",
+      "footer": "#0f172a",
+      "footer_text": "#f8fafc",
+      "overlay_dark": "rgba(0, 0, 0, 0.8)",
+      "overlay_light": "rgba(255, 255, 255, 0.8)",
+      "overlay_medium": "rgba(0, 0, 0, 0.4)"
+    },
+    "pages": {
+      "home": {
+        "id": "a6452a55-af24-40db-9490-42852c3e7b9a",
+        "site_id": "4fafcd74-7ba1-48a2-937f-4a46a5010c37",
+        "slug": "home",
+        "title": "Home Page",
+        "sections": [
+          {
+            "id": "8d8d8b47-f240-4b64-9f8a-c0f72c737ced",
+            "page_id": "a6452a55-af24-40db-9490-42852c3e7b9a",
+            "type": "header",
+            "variant": "5",
+            "position": 1,
+            "is_active": true,
+            "content": {
+              "id": "9b742a78-b86f-4a6a-9f0c-f39747ec5d3f",
+              "section_id": "8d8d8b47-f240-4b64-9f8a-c0f72c737ced",
+              "title": "New Section",
+              "subtitle": "Subtitle",
+              "description": "Description for the new section",
+              "image_url": "https://i.ibb.co/2LcZ3BQ/logo.webp",
+              "background_url": null,
+              "cta_text": "Get Started",
+              "cta_link": "/contact"
+            },
+            "items": []
+          },
+          {
+            "id": "d7592df9-ae00-40a2-bdc5-fdddf326e59a",
+            "page_id": "a6452a55-af24-40db-9490-42852c3e7b9a",
+            "type": "hero",
+            "variant": "3",
+            "position": 2,
+            "is_active": true,
+            "content": {
+              "id": "a6aa9cff-ca3a-47f2-934d-7a0e4fc0fcf3",
+              "section_id": "d7592df9-ae00-40a2-bdc5-fdddf326e59a",
+              "title": "Build Beautiful barber shop",
+              "subtitle": "Modern Web Development",
+              "description": "Our modular website builder allows you to create stunning websites with ease. No coding required.",
+              "image_url": "https://i.ibb.co/2LcZ3BQ/logo.webp",
+              "background_url": null,
+              "cta_text": "Get Started",
+              "cta_link": "/contact"
+            },
+            "items": []
+          },
+          {
+            "id": "a088a10c-5616-42c0-a90a-c5b19544c757",
+            "page_id": "a6452a55-af24-40db-9490-42852c3e7b9a",
+            "type": "services",
+            "variant": "2",
+            "position": 3,
+            "is_active": true,
+            "content": {
+              "id": "9122a11d-fcb9-4109-a182-8f45fa2a3df1",
+              "section_id": "a088a10c-5616-42c0-a90a-c5b19544c757",
+              "title": "Our Services",
+              "subtitle": "What We Offer",
+              "description": "We provide a range of services to help your business grow online.",
+              "image_url": null,
+              "background_url": null,
+              "cta_text": "View All Services",
+              "cta_link": "/services"
+            },
+            "items": [
+              {
+                "id": "697983ce-5f8b-46db-89be-22e6471f3f5a",
+                "section_id": "a088a10c-5616-42c0-a90a-c5b19544c757",
+                "title": "Web Development",
+                "subtitle": "Custom Solutions",
+                "description": "We build responsive, fast-loading websites that look great on any device.",
+                "icon": "code",
+                "image_url": "https://via.placeholder.com/400x300",
+                "rating": null,
+                "price": null,
+                "duration": null,
+                "tag": null,
+                "position": 0
+              },
+              {
+                "id": "8838565f-e964-40be-b8b8-5c0e38180d80",
+                "section_id": "a088a10c-5616-42c0-a90a-c5b19544c757",
+                "title": "E-commerce",
+                "subtitle": "Online Stores",
+                "description": "Create your online store with secure payment processing and inventory management.",
+                "icon": "search",
+                "image_url": "https://via.placeholder.com/400x300",
+                "rating": null,
+                "price": null,
+                "duration": null,
+                "tag": null,
+                "position": 1
+              },
+              {
+                "id": "19d93208-162d-46b8-a57c-69294d21ab14",
+                "section_id": "a088a10c-5616-42c0-a90a-c5b19544c757",
+                "title": "SEO Optimization",
+                "subtitle": "Improve Rankings",
+                "description": "Enhance your online presence with our search engine optimization services.",
+                "icon": "share",
+                "image_url": "https://via.placeholder.com/400x300",
+                "rating": null,
+                "price": null,
+                "duration": null,
+                "tag": null,
+                "position": 2
+              }
+            ]
+          },
+          {
+            "id": "53760ad3-06dc-43f9-ad66-c42937f90aeb",
+            "page_id": "a6452a55-af24-40db-9490-42852c3e7b9a",
+            "type": "about",
+            "variant": "2",
+            "position": 3,
+            "is_active": true,
+            "content": {
+              "id": "c401e429-d283-45bb-948d-4b4485b97e6c",
+              "section_id": "53760ad3-06dc-43f9-ad66-c42937f90aeb",
+              "title": "New Section",
+              "subtitle": "Subtitle",
+              "description": "Description for the new section",
+              "image_url": null,
+              "background_url": null,
+              "cta_text": null,
+              "cta_link": null
+            },
+            "items": []
+          },
+          {
+            "id": "8453573e-d3e7-4e95-8057-9a3d7b8a5eed",
+            "page_id": "a6452a55-af24-40db-9490-42852c3e7b9a",
+            "type": "testimonial",
+            "variant": "2",
+            "position": 4,
+            "is_active": true,
+            "content": {
+              "id": "48813f16-3aea-471a-8df6-b3f999c5617d",
+              "section_id": "8453573e-d3e7-4e95-8057-9a3d7b8a5eed",
+              "title": "Customer Testimonials",
+              "subtitle": "What Our Clients Say",
+              "description": "Hear from our satisfied customers about their experience working with us.",
+              "image_url": null,
+              "background_url": null,
+              "cta_text": null,
+              "cta_link": null
+            },
+            "items": [
+              {
+                "id": "574ffd62-8291-4c24-9996-0022ae00bb93",
+                "section_id": "8453573e-d3e7-4e95-8057-9a3d7b8a5eed",
+                "title": "John Smith",
+                "subtitle": "CEO, TechStart",
+                "description": "Working with this team has been an incredible experience. Their attention to detail and commitment to excellence is unmatched.",
+                "icon": null,
+                "image_url": "https://via.placeholder.com/100x100",
+                "rating": 5,
+                "price": null,
+                "duration": null,
+                "tag": null,
+                "position": 0
+              },
+              {
+                "id": "8f60eb15-48cb-4332-9eb8-069c06116102",
+                "section_id": "8453573e-d3e7-4e95-8057-9a3d7b8a5eed",
+                "title": "Sarah Johnson",
+                "subtitle": "Marketing Director",
+                "description": "I was amazed at how quickly they understood our brand and delivered exactly what we needed. Highly recommended!",
+                "icon": null,
+                "image_url": "https://via.placeholder.com/100x100",
+                "rating": 5,
+                "price": null,
+                "duration": null,
+                "tag": null,
+                "position": 1
+              },
+              {
+                "id": "350c0ae3-a23d-4f07-988d-cc5d384732f7",
+                "section_id": "8453573e-d3e7-4e95-8057-9a3d7b8a5eed",
+                "title": "Michael Brown",
+                "subtitle": "Small Business Owner",
+                "description": "Their work helped transform my business. Professional, responsive, and truly talented team.",
+                "icon": null,
+                "image_url": "https://via.placeholder.com/100x100",
+                "rating": 4,
+                "price": null,
+                "duration": null,
+                "tag": null,
+                "position": 2
+              }
+            ]
+          },
+          {
+            "id": "0a07df4f-b9fb-45f5-843a-f5ae513d0e61",
+            "page_id": "a6452a55-af24-40db-9490-42852c3e7b9a",
+            "type": "footer",
+            "variant": "3",
+            "position": 6,
+            "is_active": true,
+            "content": {
+              "id": "0c6e2e4e-78dd-4e53-b5f6-2c9b793feccc",
+              "section_id": "0a07df4f-b9fb-45f5-843a-f5ae513d0e61",
+              "title": "New Section",
+              "subtitle": "Subtitle",
+              "description": "Description for the new section",
+              "image_url": null,
+              "background_url": null,
+              "cta_text": null,
+              "cta_link": null
+            },
+            "items": []
+          }
+        ]
+      }
+    }
+  }
