@@ -6,15 +6,15 @@ import Hero1 from './Hero1';
 import Hero2 from './Hero2';
 import Hero3 from './Ankit_Pandey_Hero';
 import About1 from './About1';
-import About1 from './Ankit_Pandey_about';
+import About2 from './Ankit_Pandey_about';
 import Services1 from './Services1';
 import Services2 from './Ankit_Pandey_services';
 import Testimonial1 from './Testimonial1';
-import Testimonial1 from './Ankit_Pandey_Testimonials';
+import Testimonial2 from './Ankit_Pandey_Testimonials';
 import FAQ1 from './FAQ1';
 import Contact1 from './Contact1';
 import Footer1 from './Footer1';
-import Footer1 from './Ankit_Pandey_footer';
+import Footer3 from './Ankit_Pandey_footer';
 import Footer2 from './Footer2';
 import Gallery1 from './Gallery1';
 import Gallery2 from './Gallery2';
@@ -42,11 +42,13 @@ export const componentMap = {
   hero_2: Hero3,
   // About
   about_1: About1,
+  about_2: About2,
   // Services
   services_1: Services1,
   services_2: Services2,
   // Testimonials
   testimonial_1: Testimonial1,
+  testimonial_2: Testimonial2,
   // FAQ
   faq_1: FAQ1,
   // Contact
@@ -54,6 +56,7 @@ export const componentMap = {
   // Footers
   footer_1: Footer1,
   footer_2: Footer2,
+  footer_3: Footer3,
   // Gallery
   gallery_1: Gallery1,
   gallery_2: Gallery2,
