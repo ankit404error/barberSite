@@ -1,113 +1,257 @@
-// src/lib/api/siteservice.js
+// Import data directly instead of using fs
 import d2dData from '@/data/d2d.json';
 
+// Helper function to access site data
 const readSiteData = () => {
-  return d2dData;
-};
-
-export const fetchCompleteSiteData = async (subdomain) => {
-  console.log(`[Vercel Debug] fetchCompleteSiteData: Called for subdomain = "${subdomain}"`);
-  const data = readSiteData(); // This is d2dData
-  console.log(`[Vercel Debug] fetchCompleteSiteData: d2d.json internal site.subdomain = "${data.site.subdomain}"`);
-
-  if (data.site.subdomain === subdomain && data.site.is_active) {
-    console.log(`[Vercel Debug] fetchCompleteSiteData: Subdomain "${subdomain}" MATCHES d2d.json and is active. Returning d2dData.`);
-    return data;
-  } else {
-    const reason = data.site.subdomain !== subdomain ? "subdomain mismatch" : "site not active";
-    console.warn(`[Vercel Debug] fetchCompleteSiteData: Failed for subdomain "${subdomain}". Reason: ${reason}. d2d.json is for "${data.site.subdomain}".`);
-    throw new Error(`Site with subdomain "${subdomain}" not found or is inactive.`);
+  try {
+    return d2dData;
+  } catch (error) {
+    console.error("Error reading site data from JSON:", error);
+    throw error;
   }
 };
 
-export async function fetchPageData(subdomain, slug = "home") {
-  console.log(`[Vercel Debug] fetchPageData: Called for subdomain = "${subdomain}", slug = "${slug}"`);
+// Fetch site by subdomain
+export const fetchSiteBySubdomain = async (subdomain) => {
   try {
-    const siteData = await fetchCompleteSiteData(subdomain); // Relies on the logic above
-
-    const page = siteData.pages[slug];
-    if (!page) {
-      console.error(`[Vercel Debug] fetchPageData: Page with slug "${slug}" NOT FOUND for subdomain "${subdomain}" in resolved site data.`);
-      throw new Error(`Page with slug "${slug}" not found for subdomain "${subdomain}".`);
+    const data = readSiteData();
+    if (data.site.subdomain === subdomain && data.site.is_active) {
+      return data.site;
     }
-    console.log(`[Vercel Debug] fetchPageData: Page "${slug}" found for subdomain "${subdomain}".`);
+    throw new Error(`Site with subdomain ${subdomain} not found`);
+  } catch (error) {
+    throw new Error(`Failed to fetch site: ${error.message}`);
+  }
+};
 
-    const { sections, ...pageDataWithoutSections } = page;
+// Fetch site metadata
+export const fetchSiteMeta = async (siteId) => {
+  try {
+    const data = readSiteData();
+    if (data.siteMeta.site_id === siteId) {
+      return data.siteMeta;
+    }
+    throw new Error(`Site metadata for site ${siteId} not found`);
+  } catch (error) {
+    throw new Error(`Failed to fetch site metadata: ${error.message}`);
+  }
+};
+
+// Fetch site config
+export const fetchSiteConfig = async (siteId) => {
+  try {
+    const data = readSiteData();
+    if (data.config.site_id === siteId) {
+      return data.config;
+    }
+    throw new Error(`Site config for site ${siteId} not found`);
+  } catch (error) {
+    throw new Error(`Failed to fetch site config: ${error.message}`);
+  }
+};
+
+// Fetch site theme
+export const fetchSiteTheme = async (siteId) => {
+  try {
+    const data = readSiteData();
+    if (data.theme.site_id === siteId) {
+      return data.theme;
+    }
+    throw new Error(`Site theme for site ${siteId} not found`);
+  } catch (error) {
+    throw new Error(`Failed to fetch site theme: ${error.message}`);
+  }
+};
+
+// Fetch pages for a site
+export const fetchSitePages = async (siteId) => {
+  try {
+    const data = readSiteData();
+    const pages = Object.values(data.pages).map(page => {
+      // Extract page data without the sections
+      const { sections, ...pageData } = page;
+      return pageData;
+    });
+    return pages;
+  } catch (error) {
+    throw new Error(`Failed to fetch site pages: ${error.message}`);
+  }
+};
+
+// Fetch page by slug
+export const fetchPageBySlug = async (siteId, slug) => {
+  try {
+    const data = readSiteData();
+    const page = data.pages[slug];
+    if (page) {
+      // Extract page data without the sections
+      const { sections, ...pageData } = page;
+      return pageData;
+    }
+    return null;
+  } catch (error) {
+    throw new Error(`Failed to fetch page: ${error.message}`);
+  }
+};
+
+// Fetch sections for a page
+export const fetchPageSections = async (pageId) => {
+  try {
+    const data = readSiteData();
+    // Find the page that has the given ID
+    const page = Object.values(data.pages).find(p => p.id === pageId);
+    if (page && page.sections) {
+      return page.sections.map(section => {
+        // Extract section data without content and items
+        const { content, items, ...sectionData } = section;
+        return sectionData;
+      });
+    }
+    return [];
+  } catch (error) {
+    throw new Error(`Failed to fetch page sections: ${error.message}`);
+  }
+};
+
+// Fetch section content
+export const fetchSectionContent = async (sectionId) => {
+  try {
+    const data = readSiteData();
+    // Traverse through pages and sections to find matching section
+    for (const slug in data.pages) {
+      const page = data.pages[slug];
+      if (page.sections) {
+        const section = page.sections.find(s => s.id === sectionId);
+        if (section && section.content) {
+          return section.content;
+        }
+      }
+    }
+    return {};
+  } catch (error) {
+    throw new Error(`Failed to fetch section content: ${error.message}`);
+  }
+};
+
+// Fetch section items
+export const fetchSectionItems = async (sectionId) => {
+  try {
+    const data = readSiteData();
+    // Traverse through pages and sections to find matching section
+    for (const slug in data.pages) {
+      const page = data.pages[slug];
+      if (page.sections) {
+        const section = page.sections.find(s => s.id === sectionId);
+        if (section && section.items) {
+          return section.items;
+        }
+      }
+    }
+    return [];
+  } catch (error) {
+    throw new Error(`Failed to fetch section items: ${error.message}`);
+  }
+};
+
+// Fetch complete site data (all in one function)
+export const fetchCompleteSiteData = async (subdomain) => {
+  try {
+    const data = readSiteData();
+    
+    // For localhost, always use d2d data without checking subdomain
+    if (data.site.subdomain === subdomain && data.site.is_active) {
+      // Just check if the site is active
+      if (!data.site.is_active) {
+        throw new Error("Site is not active");
+      }
+    } else if (data.site.subdomain !== subdomain || !data.site.is_active) {
+      // For other environments, check both subdomain and active status
+      throw new Error("Site not found");
+    }
+    return data;
+  } catch (error) {
+    console.error("Error fetching complete site data:", error);
+    throw error;
+  }
+};
+
+/**
+ * Fetch page data for a specific subdomain and slug
+ * @param {string} subdomain - The site subdomain
+ * @param {string} slug - The page slug
+ * @returns {Object} Page data with sections
+ */
+export async function fetchPageData(subdomain, slug = "home") {
+  try {
+    const data = readSiteData();
+    
+    // For localhost, always use d2d data without checking subdomain
+    if (subdomain === "localhost:3000" || subdomain === "localhost:3001") {
+      // Just check if the site is active
+      if (!data.site.is_active) {
+        throw new Error("Site is not active");
+      }
+    } else if (data.site.subdomain !== subdomain || !data.site.is_active) {
+      // For other environments, check both subdomain and active status
+      throw new Error("Site not found");
+    }
+
+    // Verify page exists
+    const page = data.pages[slug];
+    if (!page) {
+      throw new Error("Page not found");
+    }
+
+    // Extract the data we need
+    const { sections, ...pageData } = page;
+    
     return {
-      site: siteData.site,
-      siteMeta: siteData.siteMeta,
-      config: siteData.config,
-      theme: siteData.theme,
-      page: pageDataWithoutSections,
+      site: data.site,
+      siteMeta: data.siteMeta,
+      config: data.config,
+      theme: data.theme,
+      page: pageData,
       sections: sections || [],
     };
   } catch (error) {
-    console.error(`[Vercel Debug] fetchPageData: Error for subdomain "${subdomain}", slug "${slug}": ${error.message}`);
-    throw error; // Re-throw for page.js to handle (e.g., fallback to MOCK_DATA)
-  }
-}
-
-export async function fetchSiteConfigAndThemes(subdomain) {
-  console.log(`[Vercel Debug] fetchSiteConfigAndThemes: Called for subdomain = "${subdomain}"`);
-  try {
-    const siteData = await fetchCompleteSiteData(subdomain); // Relies on the logic above
-
-    const themes = [siteData.theme].map(inner => ({
-      ...inner,
-      primary: inner.primary_color,
-    }));
-    console.log(`[Vercel Debug] fetchSiteConfigAndThemes: Successfully fetched config and themes for "${subdomain}".`);
-    return {
-      site: siteData.site,
-      themes,
-      config: siteData.config,
-    };
-  } catch (error) {
-    console.error(`[Vercel Debug] fetchSiteConfigAndThemes: Error for subdomain "${subdomain}": ${error.message}`);
+    console.error("Error fetching page data:", error);
     throw error;
   }
 }
 
-// --- Other functions like fetchSiteBySubdomain, fetchSiteMeta etc. ---
-// Ensure they correctly reference `data.site.subdomain` if they are meant to be specific to "d2d"
-// For example:
-export const fetchSiteBySubdomain = async (requestedSubdomain) => {
-  console.log(`[Vercel Debug] fetchSiteBySubdomain: Called for requestedSubdomain = "${requestedSubdomain}"`);
-  const data = readSiteData();
-  if (data.site.subdomain === requestedSubdomain && data.site.is_active) {
-    console.log(`[Vercel Debug] fetchSiteBySubdomain: Match found for "${requestedSubdomain}".`);
-    return data.site;
-  }
-  console.warn(`[Vercel Debug] fetchSiteBySubdomain: No match for "${requestedSubdomain}". d2d.json is for "${data.site.subdomain}".`);
-  throw new Error(`Site data for subdomain ${requestedSubdomain} is not available via d2d.json or site is inactive.`);
-};
+/**
+ * Fetch site configuration and themes
+ * @param {string} subdomain - The site subdomain
+ * @returns {Object} Site configuration and themes
+ */
+export async function fetchSiteConfigAndThemes(subdomain) {
+  try {
+    const data = readSiteData();
+    
+    // For localhost, always use d2d data without checking subdomain
+    if (subdomain === "localhost:3000" || subdomain === "localhost:3001") {
+      // Just check if the site is active
+      if (!data.site.is_active) {
+        throw new Error("Site is not active");
+      }
+    } else if (data.site.subdomain !== subdomain || !data.site.is_active) {
+      // For other environments, check both subdomain and active status
+      throw new Error("Site not found");
+    }
 
-// ... (ensure similar robust checks and logging for fetchSiteMeta, fetchSiteConfig, fetchSiteTheme if they are intended to only work if the siteId corresponds to the "d2d" site from d2d.json)
-// For instance, fetchSiteMeta should ideally check if the passed siteId matches d2dData.site.id before returning d2dData.siteMeta.
+    // Create a themes array with just the single theme
+    const themes = [data.theme].map(inner => ({
+      ...inner,
+      primary: inner.primary_color,
+    }));
 
-export const fetchSiteMeta = async (siteId) => {
-  console.log(`[Vercel Debug] fetchSiteMeta: Called for siteId = "${siteId}"`);
-  const data = readSiteData();
-  if (data.site.id === siteId && data.siteMeta.site_id === siteId) { // Check against the main site ID in d2d.json
-    return data.siteMeta;
+    return {
+      site: data.site,
+      themes,
+      config: data.config,
+    };
+  } catch (error) {
+    console.error("Error fetching site config:", error);
+    throw error;
   }
-  throw new Error(`Site metadata for site_id "${siteId}" not found or does not match d2d.json.`);
-};
-
-export const fetchSiteConfig = async (siteId) => {
-  console.log(`[Vercel Debug] fetchSiteConfig: Called for siteId = "${siteId}"`);
-  const data = readSiteData();
-  if (data.site.id === siteId && data.config.site_id === siteId) {
-    return data.config;
-  }
-  throw new Error(`Site config for site_id "${siteId}" not found or does not match d2d.json.`);
-};
-
-export const fetchSiteTheme = async (siteId) => {
-  console.log(`[Vercel Debug] fetchSiteTheme: Called for siteId = "${siteId}"`);
-  const data = readSiteData();
-  if (data.site.id === siteId && data.theme.site_id === siteId) {
-    return data.theme;
-  }
-  throw new Error(`Site theme for site_id "${siteId}" not found or does not match d2d.json.`);
-};
+}

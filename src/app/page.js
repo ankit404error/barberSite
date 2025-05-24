@@ -8,15 +8,30 @@ import { MOCK_DATA } from "@/lib/mock/mockdata";
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
 
+
 // Helper function to get subdomain from host
 function getSubdomain(host) {
-  console.log("Getting subdomain from host:", host);
+  console.log("[Vercel Debug] Host received by getSubdomain:", host);
+  if (!host) {
+      console.warn("[Vercel Debug] Host is undefined/null. Defaulting to 'd2d' as a fallback.");
+      return "d2d";
+  }
 
-  // Always return d2d for localhost for development
+  // Handle localhost for development
   if (host.includes("localhost")) {
-    console.log("Localhost detected, returning 'd2d'");
+    console.log("[Vercel Debug] Localhost detected, returning 'd2d'.");
     return "d2d";
   }
+
+  // Handle your specific Vercel production URL to map to "d2d"
+  // Strip "https://" or "http://" if present, though headers().get('host') usually doesn't include it.
+  const cleanHost = host.replace(/^(https?:\/\/)?/, '');
+
+  if (cleanHost === "barber-site-pi.vercel.app") {
+    console.log("[Vercel Debug] Main production URL barber-site-pi.vercel.app detected, mapping to 'd2d'.");
+    return "d2d";
+  }
+
 
   // Extract subdomain from host (e.g., 'mysite.example.com' -> 'mysite')
   const parts = host.split(".");
